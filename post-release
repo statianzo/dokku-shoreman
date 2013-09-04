@@ -1,0 +1,45 @@
+#!/bin/bash
+APP="$1"; IMAGE="$2"
+
+read -d '' runner <<'EOF'
+#!/bin/bash
+# **shoreman** is an implementation of the **Procfile** format. Inspired by
+# the original [foreman](http://ddollar.github.com/foreman/) tool for ruby,
+# as well as [norman](https://github.com/josh/norman) for node.js.
+
+# This version is altered for use within dokku
+# .env parsing has been removed
+# children are killed using their parent ID
+
+set -e
+export HOME=/app
+for file in \$HOME/.profile.d/*; do source \$file; done
+hash -r
+cd \$HOME
+
+while read line || [ -n "\$line" ]; do
+  name=\${line%%:*}
+  command=\${line#*: }
+  echo "Starting \${name}..."
+  sh -c "\${command} | sed -e 's/^/\${name}| /'" &
+done < "Procfile"
+
+onexit() {
+  echo SIGINT received
+  echo sending SIGTERM to all processes
+  children=\$(ps --ppid=\$\$ -o pid='')
+  kill -- \$children &> /dev/null
+  sleep 1
+}
+trap onexit SIGTERM SIGINT EXIT
+
+wait
+EOF
+
+set -e
+
+echo "-----> Injecting Shoreman ..."
+
+id=$(echo "$runner" | docker run -i -a stdin $IMAGE /bin/bash -c "cat > /start")
+test $(docker wait $id) -eq 0
+docker commit $id $IMAGE > /dev/null
