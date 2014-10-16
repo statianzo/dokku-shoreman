@@ -10,6 +10,7 @@ plugin will run all process types (web, worker, etc.) and stop them all together
 
 ```sh
 git clone https://github.com/statianzo/dokku-shoreman.git /var/lib/dokku/plugins/dokku-shoreman
+dokku plugins-install
 ```
 
 All future deployments will use shoreman to start all processes.
