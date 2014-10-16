@@ -40,4 +40,4 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 [dokku]: https://github.com/progrium/dokku
-[shoreman]: http://hecticjeff.net/shoreman/
+[shoreman]: https://github.com/hecticjeff/shoreman
