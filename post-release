@@ -17,11 +17,31 @@ for file in \$HOME/.profile.d/*; do source \$file; done
 hash -r
 cd \$HOME
 
+get_concurrency() {
+  name="\$1"
+  if [[ -z "\$SHOREMAN_CONCURRENCY" ]]; then
+    echo 1
+  else
+    echo $(echo "\$SHOREMAN_CONCURRENCY" | ruby -e "Hash[STDIN.read.split(",").map {|c|c.strip.split('=')}]['\$name'] || 0")
+  fi
+}
+
+start() {
+  command=\$1
+  n=\$2
+  for ((i=0;i<n;i++)); do
+    sh -c "\${command} | sed -e 's/^/\${name}| /'" &
+  done
+}
+
 while read line || [ -n "\$line" ]; do
   name=\${line%%:*}
   command=\${line#*: }
-  echo "Starting \${name}..."
-  sh -c "\${command} | sed -e 's/^/\${name}| /'" &
+  concurrency=\$(get_concurrency "\${name}")
+  if [[ \$concurrency -gt 0 ]]; then
+    echo "Starting \${name} (concurrency: \${concurrency})..."
+    start "\${command}" "\${concurrency}"
+  fi
 done < "Procfile"
 
 onexit() {
