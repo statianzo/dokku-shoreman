@@ -22,7 +22,7 @@ get_concurrency() {
   if [[ -z "\$SHOREMAN_CONCURRENCY" ]]; then
     echo 1
   else
-    echo $(echo "\$SHOREMAN_CONCURRENCY" | ruby -e "Hash[STDIN.read.split(",").map {|c|c.strip.split('=')}]['\$name'] || 0")
+    echo $(echo "\$SHOREMAN_CONCURRENCY" | ruby -e "Hash[STDIN.read.split(',').map {|c|c.strip.split('=')}]['\$name'] || 0")
   fi
 }
 
