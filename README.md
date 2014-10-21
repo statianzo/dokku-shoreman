@@ -13,6 +13,17 @@ git clone https://github.com/statianzo/dokku-shoreman.git /var/lib/dokku/plugins
 dokku plugins-install
 ```
 
+## Usage
+
+### Concurrency
+
+Optionally, you can use the `SHOREMAN_CONCURRENCY` variable to control which
+processes are started as well as how many. This is based on the
+[foreman --concurrency][foreman] flag.
+
+For e.g. SHOREMAN_CONCURRENCY=web=1,worker=2 will start one web process and two
+worker processes. Any other process in the Procfile will be ignored.
+
 All future deployments will use shoreman to start all processes.
 
 ## License
@@ -41,3 +52,4 @@ SOFTWARE.
 
 [dokku]: https://github.com/progrium/dokku
 [shoreman]: https://github.com/hecticjeff/shoreman
+[foreman]: https://ddollar.github.io/foreman/
