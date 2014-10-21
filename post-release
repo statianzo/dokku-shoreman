@@ -26,21 +26,15 @@ get_concurrency() {
   fi
 }
 
-start() {
-  command=\$1
-  n=\$2
-  for ((i=0;i<n;i++)); do
-    sh -c "\${command} | sed -e 's/^/\${name}| /'" &
-  done
-}
-
 while read line || [ -n "\$line" ]; do
   name=\${line%%:*}
   command=\${line#*: }
-  concurrency=\$(get_concurrency "\${name}")
-  if [[ \$concurrency -gt 0 ]]; then
-    echo "Starting \${name} (concurrency: \${concurrency})..."
-    start "\${command}" "\${concurrency}"
+  num_procs=\$(get_concurrency "\${name}")
+  if [[ \$num_procs -gt 0 ]]; then
+    echo "Starting \${name} (concurrency: \${num_procs})..."
+    for ((i=0;i<$num_procs;i++)); do
+      sh -c "\${command} | sed -e 's/^/\${name}| /'" &
+    done
   fi
 done < "Procfile"
 
