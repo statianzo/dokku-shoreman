@@ -32,7 +32,7 @@ while read line || [ -n "\$line" ]; do
   num_procs=\$(get_concurrency "\${name}")
   if [[ \$num_procs -gt 0 ]]; then
     echo "Starting \${name} (concurrency: \${num_procs})..."
-    for ((i=0;i<$num_procs;i++)); do
+    for ((i=0;i<\$num_procs;i++)); do
       sh -c "\${command} | sed -e 's/^/\${name}| /'" &
     done
   fi
