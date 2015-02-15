@@ -17,23 +17,30 @@ for file in \$HOME/.profile.d/*; do source \$file; done
 hash -r
 cd \$HOME
 
-while read line || [ -n "\$line" ]; do
-  name=\${line%%:*}
-  command=\${line#*: }
-  echo "Starting \${name}..."
-  sh -c "\${command} | sed -e 's/^/\${name}| /'" &
-done < "Procfile"
-
-onexit() {
-  echo SIGINT received
-  echo sending SIGTERM to all processes
-  children=\$(ps --ppid=\$\$ -o pid='')
-  kill -- \$children &> /dev/null
-  sleep 1
-}
-trap onexit SIGTERM SIGINT EXIT
-
-wait
+case "\$(basename \$0)" in
+  start)
+    while read line || [ -n "\$line" ]; do
+      name=\${line%%:*}
+      command=\${line#*: }
+      echo "Starting \${name}..."
+      sh -c "\${command} | sed -e 's/^/\${name}| /'" &
+    done < "Procfile"
+    
+    onexit() {
+      echo SIGINT received
+      echo sending SIGTERM to all processes
+      children=\$(ps --ppid=\$\$ -o pid='')
+      kill -- \$children &> /dev/null
+      sleep 1
+    }
+    trap onexit SIGTERM SIGINT EXIT
+    
+    wait
+    ;;
+  *)
+    "\$@"
+    ;;
+esac
 EOF
 
 set -e
