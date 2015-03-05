@@ -15,6 +15,10 @@ dokku plugins-install
 
 All future deployments will use shoreman to start all processes.
 
+## v0.2.0 breaking change
+
+In v0.2.0, dokku-shoreman had its pluginhook file renamed to `post-build-buildstep` to regain compatibility with upstream dokku. Users of older dokku should pin their dokku-shoreman to v0.1.x.
+
 ## License
 
 The MIT License (MIT)
