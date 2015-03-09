@@ -11,19 +11,42 @@ read -d '' runner <<'EOF'
 # .env parsing has been removed
 # children are killed using their parent ID
 
+#
+# copied/pasted some code from dokku-alt-shoreman so that I can get more logging to STDOUT
+# 12 factors, and all.
+#
+
 set -e
 export HOME=/app
 for file in \$HOME/.profile.d/*; do source \$file; done
 hash -r
 cd \$HOME
 
+if [ -n "$APP_NAME" ]; then
+  app=" ${APP_NAME} |"
+else
+  app=""
+fi
+
+log() {
+        while read data
+        do
+                prefix="$(date --iso-8601=seconds)$app ${1}"
+                echo -e "$prefix | $data"
+        done
+}
+
+start_command() {
+        bash -c "$1" 2>&1 | log "$2" &
+}
+
 case "\$(basename \$0)" in
   start)
     while read line || [ -n "\$line" ]; do
       name=\${line%%:*}
       command=\${line#*: }
-      echo "Starting \${name}..."
-      sh -c "\${command} | sed -e 's/^/\${name}| /'" &
+      start_command "$command" "${name}"
+      echo "'${command}' started with name ${name}" | log "${name}"
     done < "Procfile"
     
     onexit() {
