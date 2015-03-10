@@ -23,7 +23,7 @@ case "\$(basename \$0)" in
       name=\${line%%:*}
       command=\${line#*: }
       echo "Starting \${name}..."
-      sh -c "\${command} | sed -e 's/^/\${name}| /'" &
+      sh -c "\${command} | sed -u -e 's/^/\${name}| /'" &
     done < "Procfile"
     
     onexit() {
