@@ -19,7 +19,10 @@ cd \$HOME
 
 case "\$(basename \$0)" in
   start)
-    while read line || [ -n "\$line" ]; do
+    while read line || [ -n "\$line" ]
+    do
+     if [[ "\$line" =~ ^([A-Za-z0-9_-]+):\s*(.+)$ ]]
+     then
       name=\${line%%:*}
       command=\${line#*: }
       echo "Starting \${name}..."
