@@ -27,6 +27,7 @@ case "\$(basename \$0)" in
       command=\${line#*: }
       echo "Starting \${name}..."
       setuidgid "$(stat -c %U "$HOME")" sh -c "\${command} | sed -u -e 's/^/\${name}| /'" &
+     fi 
     done < "Procfile"
     
     onexit() {
