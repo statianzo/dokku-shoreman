@@ -1,0 +1,6 @@
+[plugin]
+name = "dokku-shoreman"
+description = "A plugin for dokku that injects a stripped down version of shoreman"
+version = "0.2.1"
+website_url = "https://github.com/pmvieira/dokku-shoreman"
+[plugin.config]
