@@ -8,9 +8,14 @@ plugin will run all process types (web, worker, etc.) and stop them all together
 
 ## Installation
 
+#previous versions (0.3.x and below)
 ```sh
 git clone https://github.com/statianzo/dokku-shoreman.git /var/lib/dokku/plugins/dokku-shoreman
 dokku plugins-install
+```
+#latest versions 
+```sh
+sudo dokku plugin:install git clone https://github.com/statianzo/dokku-shoreman.git
 ```
 
 All future deployments will use shoreman to start all processes.
