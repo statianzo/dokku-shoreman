@@ -1,5 +1,7 @@
 # dokku-shoreman
 
+> Deprecated as of Dokku 0.3.14 (process management) and 0.7.0 (restart policies)
+
 dokku-shoreman is a plugin for [dokku][dokku] that injects a stripped down
 version of [shoreman][shoreman], a Procfile runner written in bash.
 
